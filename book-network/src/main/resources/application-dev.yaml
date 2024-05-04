@@ -14,10 +14,10 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host: 192.168.0.13
-    port: 1025
-    username: ali
-    password: ali
+    host: 0.tcp.ngrok.io
+    port: 19640
+    username: username
+    password: 123456
     properties:
       mail:
         smtp:
