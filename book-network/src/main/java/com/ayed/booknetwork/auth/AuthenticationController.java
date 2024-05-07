@@ -53,6 +53,15 @@ public class AuthenticationController {
     return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
   }
 
+  /**
+   * Activates a user account using the provided activation token.
+   *
+   * @param token the activation token
+   * @throws MessagingException if an error occurs during account activation
+   */
+  @Operation(
+      summary = "Activate Account",
+      description = "Activates a user account using the provided activation token.")
   @GetMapping("/activate-account")
   public void confirm(@RequestParam String token) throws MessagingException {
     authenticationService.activateAccount(token);
