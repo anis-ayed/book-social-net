@@ -1,5 +1,7 @@
 package com.ayed.booknetwork.user;
 
+import com.ayed.booknetwork.book.Book;
+import com.ayed.booknetwork.history.BookTransactionHistory;
 import com.ayed.booknetwork.role.Role;
 import jakarta.persistence.*;
 import java.security.Principal;
@@ -27,72 +29,77 @@ import org.springframework.security.core.userdetails.UserDetails;
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    private String firstname;
-    private String lastname;
-    private LocalDate dateOfBirth;
-    @Column(unique = true)
-    private String email;
+  private String firstname;
+  private String lastname;
+  private LocalDate dateOfBirth;
 
-    private String password;
-    private boolean accountLocked;
-    private boolean enabled;
+  @Column(unique = true)
+  private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+  private String password;
+  private boolean accountLocked;
+  private boolean enabled;
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+  @ManyToMany(fetch = FetchType.EAGER)
+  private List<Role> roles;
 
-    @LastModifiedDate
-    @Column(insertable = false)
-    private LocalDateTime lastModifiedDate;
+  @OneToMany(mappedBy = "owner")
+  private List<Book> books;
 
-    @Override
-    public String getName() {
-        return email;
-    }
+  @OneToMany(mappedBy = "user")
+  private List<BookTransactionHistory> histories;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+  @CreatedDate
+  @Column(nullable = false, updatable = false)
+  private LocalDateTime createdDate;
+
+  @LastModifiedDate
+  @Column(insertable = false)
+  private LocalDateTime lastModifiedDate;
+
+  @Override
+  public String getName() {
+    return email;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
     return this.roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).toList();
-    }
+  }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+  @Override
+  public String getPassword() {
+    return password;
+  }
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
+  @Override
+  public String getUsername() {
+    return email;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !accountLocked;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return !accountLocked;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
+  @Override
+  public boolean isEnabled() {
+    return enabled;
+  }
 
-    public String fullName() {
-        return firstname + " " + lastname;
-    }
+  public String fullName() {
+    return firstname + " " + lastname;
+  }
 }
