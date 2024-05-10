@@ -1,5 +1,6 @@
 package com.ayed.booknetwork.book;
 
+import com.ayed.booknetwork.history.BookTransactionHistory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +27,17 @@ public class BookMapper {
         .shareable(book.isShareable())
         .rate(book.getRate())
         .owner(book.getOwner().fullName())
+        .build();
+  }
+
+  public BorrowedBookResponse toBorrowedBookResponse(BookTransactionHistory history) {
+    return BorrowedBookResponse.builder()
+        .id(history.getBook().getId())
+        .title(history.getBook().getTitle())
+        .authorName(history.getBook().getAuthorName())
+        .returned(history.isReturned())
+        .returnApproved(history.isReturnApproved())
+        .rate(history.getBook().getRate())
         .build();
   }
 }
